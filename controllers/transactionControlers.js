@@ -25,21 +25,11 @@ module.exports = {
                 return res.status(404).json({ error: 'Destination account not found' });
             }
 
-            const newTransaction = await prisma.transactions.create({
+            const newTransaction = await prisma.bank_account_transactions.create({
                 data: {
                     source_account_id,
                     destination_account_id,
                     amount: BigInt(amount),
-                    source_account: {
-                        connect: {
-                            id: source_account_id
-                        },
-                    },
-                    destination_account: {
-                        connect: {
-                            id: destination_account_id
-                        },
-                    },
                 }
             });
 
@@ -59,7 +49,7 @@ module.exports = {
 
     getTransaction: async (req, res) => {
         try {
-            const transactions = await prisma.transactions.findMany();
+            const transactions = await prisma.bank_account_transactions.findMany();
             const transactionsData = transactions.map(transaction => ({
                 id: transaction.id,
                 source_account_id: transaction.source_account_id,
@@ -80,13 +70,9 @@ module.exports = {
         const transactionId = parseInt(req.params.transactionId);
 
         try {
-            const transaction = await prisma.transactions.findUnique({
+            const transaction = await prisma.bank_account_transactions.findUnique({
                 where: {
                     id: transactionId
-                },
-                include: {
-                    source_account: true,
-                    destination_account: true
                 }
             });
 
@@ -99,8 +85,6 @@ module.exports = {
                 source_account_id: transaction.source_account_id,
                 destination_account_id: transaction.destination_account_id,
                 amount: Number(transaction.amount),
-                source_account: transaction.source_account,
-                destination_account: transaction.destination_account,
             };
 
             return res.json({
