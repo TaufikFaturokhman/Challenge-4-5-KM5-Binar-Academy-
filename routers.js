@@ -14,6 +14,12 @@ router.get('/', (req, res) => {
 router.post('/auth/register', userController.registerUser)
 router.post('/auth/login', userController.loginUser)
 router.get('/auth/authenticate', checkToken, userController.getProfile)
+router.get('/auth/registerBank', accountControllers.addAccount)
+router.get('/auth/accounts', accountControllers.getAccount)
+router.get('/auth/accounts/:accountId', accountControllers.getAccountById)
+router.post('/auth/transactions', transactionControlers.addTransaction)
+router.get('/auth/transactions', transactionControlers.getTransaction)
+router.get('/auth/transactions/:transactions', transactionControlers.getTransactionById)
 
 // router.post('/users', userController.registerUser)
 // router.get('/users', userController.getUsers)

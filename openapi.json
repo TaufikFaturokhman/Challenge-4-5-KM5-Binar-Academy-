@@ -22,6 +22,7 @@
     "paths": {
       "/auth/register": {
         "post": {
+        "summary": "register",
           "tags": ["user"],
           "requestBody": {
             "content": {
@@ -84,6 +85,7 @@
       },
       "/auth/login" : {
         "post": {
+          "summary": "login",
             "tags" : ["Auth"],
             "requestBody": {
                 "content" : {
@@ -123,6 +125,354 @@
                     }
                 }
             }
+        }
+      },
+      "/auth/registerBank": {
+        "post": {
+          "summary": "register bank",
+          "tags": [
+            "user"
+          ],
+          "requestBody": {
+            "description": "User registration and bank account creation",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "bank_name": {
+                      "type": "string"
+                    },
+                    "bank_account_number": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "New bank account created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "bank_name": {
+                            "type": "string"
+                          },
+                          "bank_account_number": {
+                            "type": "string"
+                          },
+                          "balance": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Error adding account"
+            }
+          }
+        }
+      },
+      "/accounts": {
+        "get": {
+          "tags": [
+            "account"
+          ],
+          "responses": {
+            "200": {
+              "description": "List of bank accounts",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer"
+                            },
+                            "bank_name": {
+                              "type": "string"
+                            },
+                            "bank_account_number": {
+                              "type": "string"
+                            },
+                            "balance": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error getting accounts"
+            }
+          }
+        }
+      },
+      "/accounts/{accountId}": {
+        "get": {
+          "tags": [
+            "account"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "accountId",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Numeric ID of the account to get"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Bank account details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "bank_name": {
+                            "type": "string"
+                          },
+                          "bank_account_number": {
+                            "type": "string"
+                          },
+                          "balance": {
+                            "type": "integer"
+                          },
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "password": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/transactions": {
+        "post": {
+          "summary": "Add a new transaction",
+          "tags": [
+            "transaction"
+          ],
+          "requestBody": {
+            "description": "Transaction details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "source_account_id": {
+                      "type": "integer"
+                    },
+                    "destination_account_id": {
+                      "type": "integer"
+                    },
+                    "amount": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "New transaction added",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "source_account_id": {
+                            "type": "integer"
+                          },
+                          "destination_account_id": {
+                            "type": "integer"
+                          },
+                          "amount": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Source or destination account not found"
+            },
+            "500": {
+              "description": "Error adding transaction"
+            }
+          }
+        }
+      },
+      "/transaction": {
+        "get": {
+          "summary": "Get all transactions",
+          "tags": [
+            "transaction"
+          ],
+          "responses": {
+            "200": {
+              "description": "List of transactions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer"
+                            },
+                            "source_account_id": {
+                              "type": "integer"
+                            },
+                            "destination_account_id": {
+                              "type": "integer"
+                            },
+                            "amount": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error getting transactions"
+            }
+          }
+        }
+      },
+      "/transactions/{transactionId}": {
+        "get": {
+          "summary": "Get a transaction by ID",
+          "tags": [
+            "transaction"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "transactionId",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              },
+              "description": "Numeric ID of the transaction to get"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transaction details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "source_account_id": {
+                            "type": "integer"
+                          },
+                          "destination_account_id": {
+                            "type": "integer"
+                          },
+                          "amount": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Transaction not found"
+            },
+            "500": {
+              "description": "Error getting transaction detail"
+            }
+          }
         }
       }
     }
